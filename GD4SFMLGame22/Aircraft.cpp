@@ -10,6 +10,8 @@
 #include "ResourceHolder.hpp"
 #include "Utility.hpp"
 #include "DataTables.hpp"
+#include "Pickup.hpp"
+#include "PickupType.hpp"
 
 
 namespace
@@ -61,6 +63,12 @@ Aircraft::Aircraft(AircraftType type, const TextureHolder& textures, const FontH
 	{
 		CreateProjectile(node, ProjectileType::kMissile, 0.f, 0.5f, textures);
 	};
+
+	m_drop_pickup_command.category = static_cast<int>(Category::Type::kScene);
+	m_drop_pickup_command.action = [this, &textures](SceneNode& node, sf::Time)
+	{
+		CreatePickup(node, textures);
+	};
 	
 	std::unique_ptr<TextNode> healthDisplay(new TextNode(fonts, ""));
 	m_health_display = healthDisplay.get();
@@ -108,7 +116,7 @@ void Aircraft::IncreaseSpread()
 	}
 }
 
-void Aircraft::CollectMissiles(unsigned count)
+void Aircraft::CollectMissiles(unsigned int count)
 {
 	m_missile_ammo += count;
 }
@@ -137,6 +145,7 @@ void Aircraft::UpdateCurrent(sf::Time dt, CommandQueue& commands)
 {
 	if(IsDestroyed())
 	{
+		CheckPickupDrop(commands);
 		m_is_marked_for_removal = true;
 		return;
 	}
@@ -281,4 +290,23 @@ bool Aircraft::IsMarkedForRemoval() const
 {
 	return m_is_marked_for_removal;
 }
+
+void Aircraft::CheckPickupDrop(CommandQueue& commands)
+{
+	if(!IsAllied() && Utility::RandomInt(3) == 0)
+	{
+		commands.Push(m_drop_pickup_command);
+	}
+}
+
+void Aircraft::CreatePickup(SceneNode& node, const TextureHolder& textures) const
+{
+	auto type = static_cast<PickupType>(Utility::RandomInt(static_cast<int>(PickupType::kPickupCount)));
+	std::unique_ptr<Pickup> pickup(new Pickup(type, textures));
+	pickup->setPosition(GetWorldPosition());
+	pickup->SetVelocity(0.f, 1.f);
+	node.AttachChild(std::move(pickup));
+}
+
+
 

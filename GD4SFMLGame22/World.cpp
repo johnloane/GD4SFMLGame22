@@ -68,6 +68,10 @@ void World::LoadTextures()
 
 	m_textures.Load(Textures::kBullet, "Media/Textures/Bullet.png");
 	m_textures.Load(Textures::kMissile, "Media/Textures/Missile.png");
+	m_textures.Load(Textures::kHealthRefill, "Media/Textures/HealthRefill.png");
+	m_textures.Load(Textures::kMissileRefill, "Media/Textures/MissileRefill.png");
+	m_textures.Load(Textures::kFireSpread, "Media/Textures/FireSpread.png");
+	m_textures.Load(Textures::kFireRate, "Media/Textures/FireRate.png");
 }
 
 void World::BuildScene()

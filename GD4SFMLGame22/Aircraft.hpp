@@ -37,6 +37,8 @@ private:
 	
 	void CheckProjectileLaunch(sf::Time dt, CommandQueue& commands);
 	bool IsAllied() const;
+	void CreatePickup(SceneNode& node, const TextureHolder& textures) const;
+	void CheckPickupDrop(CommandQueue& commands);
 
 
 private:
@@ -45,6 +47,7 @@ private:
 
 	Command m_fire_command;
 	Command m_missile_command;
+	Command m_drop_pickup_command;
 
 	bool m_is_firing;
 	bool m_is_launching_missile;

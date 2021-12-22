@@ -7,6 +7,18 @@
 
 
 #include <cmath>
+#include <random>
+
+namespace
+{
+	std::default_random_engine CreateRandomEngine()
+	{
+		auto seed = static_cast<unsigned long>(std::time(nullptr));
+		return std::default_random_engine(seed);
+	}
+
+	auto RandomEngine = CreateRandomEngine();
+}
 
 
 
@@ -155,4 +167,10 @@ float Utility::Length(sf::Vector2f vector)
 float Utility::ToDegrees(float angle_in_radians)
 {
 	return angle_in_radians * (180/M_PI);
+}
+
+int Utility::RandomInt(int exclusiveMax)
+{
+	std::uniform_int_distribution<> distr(0, exclusiveMax - 1);
+	return distr(RandomEngine);
 }
