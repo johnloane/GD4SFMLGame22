@@ -29,6 +29,8 @@ public:
 	void Update(sf::Time dt);
 	void Draw();
 	CommandQueue& getCommandQueue();
+	bool HasAlivePlayer() const;
+	bool HasPlayerReachedEnd() const;
 
 private:
 	void LoadTextures();

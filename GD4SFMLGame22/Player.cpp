@@ -17,7 +17,7 @@ struct AircraftMover
 	sf::Vector2f velocity;
 };
 
-Player::Player()
+Player::Player() : m_current_mission_status(MissionStatus::kMissionRunning)
 {
 	//Set initial key bindings
 	m_key_binding[sf::Keyboard::A] = PlayerAction::kMoveLeft;
@@ -89,6 +89,16 @@ sf::Keyboard::Key Player::GetAssignedKey(PlayerAction action) const
 		}
 	}
 	return sf::Keyboard::Unknown;
+}
+
+void Player::SetMissionStatus(MissionStatus status)
+{
+	m_current_mission_status = status;
+}
+
+MissionStatus Player::GetMissionStatus() const
+{
+	return m_current_mission_status;
 }
 
 void Player::InitialiseActions()

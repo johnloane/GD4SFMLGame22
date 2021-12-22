@@ -59,6 +59,16 @@ void World::Draw()
 	m_window.draw(m_scenegraph);
 }
 
+bool World::HasAlivePlayer() const
+{
+	return !m_player_aircraft->IsMarkedForRemoval();
+}
+
+bool World::HasPlayerReachedEnd() const
+{
+	return !m_world_bounds.contains(m_player_aircraft->getPosition());
+}
+
 void World::LoadTextures()
 {
 	m_textures.Load(Textures::kEagle, "Media/Textures/Eagle.png");
