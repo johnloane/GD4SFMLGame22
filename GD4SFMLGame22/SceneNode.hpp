@@ -47,7 +47,7 @@ private:
 	void DrawBoundingRect(sf::RenderTarget& target, sf::RenderStates states, sf::FloatRect& bounding_rect) const;
 
 	virtual bool IsDestroyed() const;
-	bool IsMarkedForRemoval() const;
+	virtual bool IsMarkedForRemoval() const;
 	
 	void CheckNodeCollision(SceneNode& node, std::set<Pair>& collisionPairs);
 	
@@ -57,4 +57,5 @@ private:
 	SceneNode* m_parent;
 	Category::Type m_default_category;
 };
-float distance(const SceneNode& lhs, const SceneNode& rhs);
+bool Collision(const SceneNode& lhs, const SceneNode& rhs);
+float Distance(const SceneNode& lhs, const SceneNode& rhs);

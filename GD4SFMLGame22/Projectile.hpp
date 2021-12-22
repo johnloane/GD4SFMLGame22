@@ -13,8 +13,8 @@ public:
 	void GuideTowards(sf::Vector2f position);
 	bool IsGuided() const;
 
-	virtual unsigned int GetCategory() const override;
-	virtual sf::FloatRect GetBoundingRect();
+	unsigned int GetCategory() const override;
+	sf::FloatRect GetBoundingRect() const override;
 	float GetMaxSpeed() const;
 	int GetDamage() const;
 

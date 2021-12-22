@@ -39,6 +39,7 @@ Aircraft::Aircraft(AircraftType type, const TextureHolder& textures, const FontH
 	, m_is_firing(false)
 	, m_is_launching_missile(false)
 , m_fire_countdown(sf::Time::Zero)
+, m_is_marked_for_removal(false)
 , m_fire_rate(1)
 , m_spread_level(1)
 , m_missile_ammo(2)
@@ -65,7 +66,7 @@ Aircraft::Aircraft(AircraftType type, const TextureHolder& textures, const FontH
 	m_health_display = healthDisplay.get();
 	AttachChild(std::move(healthDisplay));
 
-	if (GetCategory() == static_cast<int>(Category::kPlayerAircraft))
+	if (Aircraft::GetCategory() == static_cast<int>(Category::kPlayerAircraft))
 	{
 		std::unique_ptr<TextNode> missileDisplay(new TextNode(fonts, ""));
 		missileDisplay->setPosition(0, 70);
@@ -85,9 +86,10 @@ void Aircraft::DrawCurrent(sf::RenderTarget& target, sf::RenderStates states) co
 unsigned int Aircraft::GetCategory() const
 {
 	if (IsAllied())
+	{
 		return static_cast<int>(Category::kPlayerAircraft);
-	else
-		return static_cast<int>(Category::kEnemyAircraft);
+	}
+	return static_cast<int>(Category::kEnemyAircraft);
 }
 
 void Aircraft::IncreaseFireRate()
@@ -133,6 +135,11 @@ void Aircraft::UpdateTexts()
 
 void Aircraft::UpdateCurrent(sf::Time dt, CommandQueue& commands)
 {
+	if(IsDestroyed())
+	{
+		m_is_marked_for_removal = true;
+		return;
+	}
 	//Check if bullets or missiles are fired
 	CheckProjectileLaunch(dt, commands);
 	// Update enemy movement pattern; apply velocity

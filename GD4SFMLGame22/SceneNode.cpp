@@ -109,7 +109,7 @@ unsigned int SceneNode::GetCategory() const
 	return static_cast<int>(m_default_category);
 }
 
-float distance(const SceneNode& lhs, const SceneNode& rhs)
+float Distance(const SceneNode& lhs, const SceneNode& rhs)
 {
 	return Utility::Length(lhs.GetWorldPosition() - rhs.GetWorldPosition());
 }

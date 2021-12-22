@@ -28,12 +28,12 @@ public:
 	void CreateProjectile(SceneNode& node, ProjectileType type, float x_offset, float y_offset, const TextureHolder& textures) const;
 
 	sf::FloatRect GetBoundingRect() const override;
-	bool IsMarkedForRemoval() const;
+	bool IsMarkedForRemoval() const override;
 
 
 private:
-	virtual void DrawCurrent(sf::RenderTarget& target, sf::RenderStates states) const;
-	virtual void UpdateCurrent(sf::Time dt, CommandQueue& commands) override;
+	void DrawCurrent(sf::RenderTarget& target, sf::RenderStates states) const override;
+	void UpdateCurrent(sf::Time dt, CommandQueue& commands) override;
 	
 	void CheckProjectileLaunch(sf::Time dt, CommandQueue& commands);
 	bool IsAllied() const;

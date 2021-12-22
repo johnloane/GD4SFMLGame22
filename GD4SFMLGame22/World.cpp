@@ -118,9 +118,9 @@ CommandQueue& World::getCommandQueue()
 void World::AdaptPlayerPosition()
 {
 	//Keep the player on the screen
-	sf::FloatRect view_bounds(m_camera.getCenter() - m_camera.getSize() / 2.f, m_camera.getSize());
+	sf::FloatRect view_bounds = GetViewBounds();
 	const float border_distance = 40.f;
-	sf::Vector2f position = m_player_aircraft->GetWorldPosition();
+	sf::Vector2f position = m_player_aircraft->getPosition();
 	position.x = std::max(position.x, view_bounds.left + border_distance);
 	position.x = std::min(position.x, view_bounds.left + view_bounds.width - border_distance);
 	position.y = std::max(position.y, view_bounds.top + border_distance);
@@ -222,7 +222,7 @@ void World::GuideMissiles()
 		// Find closest enemy
 		for(Aircraft * enemy :  m_active_enemies)
 		{
-			float enemyDistance = distance(missile, *enemy);
+			float enemyDistance = Distance(missile, *enemy);
 
 			if (enemyDistance < minDistance)
 			{
@@ -245,7 +245,7 @@ bool MatchesCategories(SceneNode::Pair& colliders, Category::Type type1, Categor
 {
 	unsigned int category1 = colliders.first->GetCategory();
 	unsigned int category2 = colliders.second->GetCategory();
-
+	std::cout << category1 << category2 << std::endl;
 	if(type1 & category1 && type2 & category2)
 	{
 		return true;
@@ -301,12 +301,13 @@ void World::HandleCollisions()
 void World::DestroyEntitiesOutsideView()
 {
 	Command command;
-	command.category = Category::Type::kAircraft | Category::Type::kProjectile;
+	command.category = Category::Type::kEnemyAircraft | Category::Type::kProjectile;
 	command.action = DerivedAction<Entity>([this](Entity& e, sf::Time)
 	{
 		//Does the object intersect with the battlefield
 		if (!GetBattlefieldBounds().intersects(e.GetBoundingRect()))
 		{
+			std::cout << "Destroying the entity" << std::endl;
 			e.Destroy();
 		}
 	});

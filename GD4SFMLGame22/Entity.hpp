@@ -14,7 +14,7 @@ public:
 
 	int GetHitPoints() const;
 	void Repair(unsigned int points);
-	void Damage(unsigned int points);
+	void Damage(int points);
 	void Destroy();
 	virtual bool IsDestroyed() const override;
 
@@ -23,5 +23,5 @@ protected:
 
 private:
 	sf::Vector2f m_velocity;
-	unsigned int m_hitpoints;
+	int m_hitpoints;
 };
