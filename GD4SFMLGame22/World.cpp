@@ -4,6 +4,8 @@
 #include <iostream>
 #include <limits>
 
+#include "ParticleNode.hpp"
+#include "ParticleType.hpp"
 #include "Pickup.hpp"
 #include "Projectile.hpp"
 #include "Utility.hpp"
@@ -83,7 +85,7 @@ void World::BuildScene()
 	//Initialize the different layers
 	for (std::size_t i = 0; i < static_cast<int>(Layers::kLayerCount); ++i)
 	{
-		Category::Type category = (i == static_cast<int>(Layers::kAir)) ? Category::Type::kScene : Category::Type::kNone;
+		Category::Type category = (i == static_cast<int>(Layers::kLowerAir)) ? Category::Type::kScene : Category::Type::kNone;
 		SceneNode::Ptr layer(new SceneNode(category));
 		m_scene_layers[i] = layer.get();
 		m_scenegraph.AttachChild(std::move(layer));
@@ -110,11 +112,19 @@ void World::BuildScene()
 	finish_sprite->setPosition(0.f, -76.f);
 	m_scene_layers[static_cast<int>(Layers::kBackground)]->AttachChild(std::move(finish_sprite));
 
+	// Add particle node to the scene
+	std::unique_ptr<ParticleNode> smokeNode(new ParticleNode(ParticleType::kSmoke, m_textures));
+	m_scene_layers[static_cast<int>(Layers::kLowerAir)]->AttachChild(std::move(smokeNode));
+
+	// Add propellant particle node to the scene
+	std::unique_ptr<ParticleNode> propellantNode(new ParticleNode(ParticleType::kPropellant, m_textures));
+	m_scene_layers[static_cast<int>(Layers::kLowerAir)]->AttachChild(std::move(propellantNode));
+
 	//Add player's aircraft
 	std::unique_ptr<Aircraft> leader(new Aircraft(AircraftType::kEagle, m_textures, m_fonts));
 	m_player_aircraft = leader.get();
 	m_player_aircraft->setPosition(m_spawn_position);
-	m_scene_layers[static_cast<int>(Layers::kAir)]->AttachChild(std::move(leader));
+	m_scene_layers[static_cast<int>(Layers::kUpperAir)]->AttachChild(std::move(leader));
 
 	// //Add two escorts
 	// std::unique_ptr<Aircraft> leftEscort(new Aircraft(AircraftType::kRaptor, m_textures, m_fonts));
@@ -183,7 +193,7 @@ void World::SpawnEnemies()
 		std::unique_ptr<Aircraft> enemy(new Aircraft(spawn.m_type, m_textures, m_fonts));
 		enemy->setPosition(spawn.m_x, spawn.m_y);
 		enemy->setRotation(180.f);
-		m_scene_layers[static_cast<int>(Layers::kAir)]->AttachChild(std::move(enemy));
+		m_scene_layers[static_cast<int>(Layers::kUpperAir)]->AttachChild(std::move(enemy));
 
 		m_enemy_spawn_points.pop_back();
 		
