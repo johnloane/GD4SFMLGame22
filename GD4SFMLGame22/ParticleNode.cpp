@@ -17,7 +17,7 @@ ParticleNode::ParticleNode(ParticleType type, const TextureHolder& textures)
 	: SceneNode()
 	, m_texture(textures.Get(Textures::kParticle))
 	, m_type(type)
-	, m_vertex_array(sf::Quads)
+	, m_vertex_array(sf::TriangleStrip)
 	, m_needs_vertex_update(true)
 {
 }
