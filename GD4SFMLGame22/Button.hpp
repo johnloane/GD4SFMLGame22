@@ -9,6 +9,8 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Text.hpp>
 
+#include "ButtonType.hpp"
+
 namespace GUI
 {
 	class Button : public Component
@@ -32,12 +34,10 @@ namespace GUI
 
 	private:
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+		void ChangeTexture(ButtonType buttonType);
 
 	private:
 		Callback m_callback;
-		const sf::Texture& m_normal_texture;
-		const sf::Texture& m_selected_texture;
-		const sf::Texture& m_pressed_texture;
 		sf::Sprite m_sprite;
 		sf::Text m_text;
 		bool m_is_toggle;

@@ -15,7 +15,7 @@ World::World(sf::RenderWindow& window, FontHolder& font)
 	, m_fonts(font)
 	, m_scenegraph()
 	, m_scene_layers()
-	, m_world_bounds(0.f, 0.f, m_camera.getSize().x, 2000)
+	, m_world_bounds(0.f, 0.f, m_camera.getSize().x, 5000)
 	, m_spawn_position(m_camera.getSize().x/2.f, m_world_bounds.height - m_camera.getSize().y /2.f)
 	, m_scrollspeed(-50.f)
 	, m_player_aircraft(nullptr)
@@ -71,17 +71,11 @@ bool World::HasPlayerReachedEnd() const
 
 void World::LoadTextures()
 {
-	m_textures.Load(Textures::kEagle, "Media/Textures/Eagle.png");
-	m_textures.Load(Textures::kRaptor, "Media/Textures/Raptor.png");
-	m_textures.Load(Textures::kAvenger, "Media/Textures/Avenger.png");
-	m_textures.Load(Textures::kDesert, "Media/Textures/Desert.png");
-
-	m_textures.Load(Textures::kBullet, "Media/Textures/Bullet.png");
-	m_textures.Load(Textures::kMissile, "Media/Textures/Missile.png");
-	m_textures.Load(Textures::kHealthRefill, "Media/Textures/HealthRefill.png");
-	m_textures.Load(Textures::kMissileRefill, "Media/Textures/MissileRefill.png");
-	m_textures.Load(Textures::kFireSpread, "Media/Textures/FireSpread.png");
-	m_textures.Load(Textures::kFireRate, "Media/Textures/FireRate.png");
+	m_textures.Load(Textures::kEntities, "Media/Textures/Entities.png");
+	m_textures.Load(Textures::kJungle, "Media/Textures/Jungle.png");
+	m_textures.Load(Textures::kExplosion, "Media/Textures/Explosion.png");
+	m_textures.Load(Textures::kParticle, "Media/Textures/Particle.png");
+	m_textures.Load(Textures::kFinishLine, "Media/Textures/FinishLine.png");
 }
 
 void World::BuildScene()
@@ -96,15 +90,25 @@ void World::BuildScene()
 	}
 
 	//Prepare the background
-	sf::Texture& texture = m_textures.Get(Textures::kDesert);
-	sf::IntRect textureRect(m_world_bounds);
+	sf::Texture& jungle_texture = m_textures.Get(Textures::kJungle);
+	//sf::IntRect textureRect(m_world_bounds);
 	//Tile the texture to cover our world
-	texture.setRepeated(true);
+	jungle_texture.setRepeated(true);
+
+	float view_height = m_camera.getSize().y;
+	sf::IntRect texture_rect(m_world_bounds);
+	texture_rect.height += static_cast<int>(view_height);
 
 	//Add the background sprite to our scene
-	std::unique_ptr<SpriteNode> background_sprite(new SpriteNode(texture, textureRect));
-	background_sprite->setPosition(m_world_bounds.left, m_world_bounds.top);
-	m_scene_layers[static_cast<int>(Layers::kBackground)]->AttachChild(std::move(background_sprite));
+	std::unique_ptr<SpriteNode> jungle_sprite(new SpriteNode(jungle_texture, texture_rect));
+	jungle_sprite->setPosition(m_world_bounds.left, m_world_bounds.top - view_height);
+	m_scene_layers[static_cast<int>(Layers::kBackground)]->AttachChild(std::move(jungle_sprite));
+
+	// Add the finish line to the scene
+	sf::Texture& finish_texture = m_textures.Get(Textures::kFinishLine);
+	std::unique_ptr<SpriteNode> finish_sprite(new SpriteNode(finish_texture));
+	finish_sprite->setPosition(0.f, -76.f);
+	m_scene_layers[static_cast<int>(Layers::kBackground)]->AttachChild(std::move(finish_sprite));
 
 	//Add player's aircraft
 	std::unique_ptr<Aircraft> leader(new Aircraft(AircraftType::kEagle, m_textures, m_fonts));
@@ -197,11 +201,29 @@ void World::AddEnemies()
 	//Add all enemies
 	AddEnemy(AircraftType::kRaptor, 0.f, 500.f);
 	AddEnemy(AircraftType::kRaptor, 0.f, 1000.f);
-	AddEnemy(AircraftType::kRaptor, 100.f, 1100.f);
-	AddEnemy(AircraftType::kRaptor, -100.f, 1100.f);
-	AddEnemy(AircraftType::kAvenger, -70.f, 1400.f);
-	AddEnemy(AircraftType::kAvenger, 70.f, 1400.f);
-	AddEnemy(AircraftType::kAvenger, 70.f, 1600.f);
+	AddEnemy(AircraftType::kRaptor, +100.f, 1150.f);
+	AddEnemy(AircraftType::kRaptor, -100.f, 1150.f);
+	AddEnemy(AircraftType::kAvenger, 70.f, 1500.f);
+	AddEnemy(AircraftType::kAvenger, -70.f, 1500.f);
+	AddEnemy(AircraftType::kAvenger, -70.f, 1710.f);
+	AddEnemy(AircraftType::kAvenger, 70.f, 1700.f);
+	AddEnemy(AircraftType::kAvenger, 30.f, 1850.f);
+	AddEnemy(AircraftType::kRaptor, 300.f, 2200.f);
+	AddEnemy(AircraftType::kRaptor, -300.f, 2200.f);
+	AddEnemy(AircraftType::kRaptor, 0.f, 2200.f);
+	AddEnemy(AircraftType::kRaptor, 0.f, 2500.f);
+	AddEnemy(AircraftType::kAvenger, -300.f, 2700.f);
+	AddEnemy(AircraftType::kAvenger, -300.f, 2700.f);
+	AddEnemy(AircraftType::kRaptor, 0.f, 3000.f);
+	AddEnemy(AircraftType::kRaptor, 250.f, 3250.f);
+	AddEnemy(AircraftType::kRaptor, -250.f, 3250.f);
+	AddEnemy(AircraftType::kAvenger, 0.f, 3500.f);
+	AddEnemy(AircraftType::kAvenger, 0.f, 3700.f);
+	AddEnemy(AircraftType::kRaptor, 0.f, 3800.f);
+	AddEnemy(AircraftType::kAvenger, 0.f, 4000.f);
+	AddEnemy(AircraftType::kAvenger, -200.f, 4200.f);
+	AddEnemy(AircraftType::kRaptor, 200.f, 4200.f);
+	AddEnemy(AircraftType::kRaptor, 0.f, 4400.f);
 
 	//Sort according to y value so that lower enemies are checked first
 	std::sort(m_enemy_spawn_points.begin(), m_enemy_spawn_points.end(), [](SpawnPoint lhs, SpawnPoint rhs)

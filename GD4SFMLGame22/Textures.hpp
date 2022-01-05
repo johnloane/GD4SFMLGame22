@@ -1,18 +1,11 @@
 #pragma once
 enum class Textures
 {
-	kEagle,
-	kRaptor,
-	kAvenger,
-	kDesert,
-	kBullet,
-	kMissile,
-	kHealthRefill,
-	kMissileRefill,
-	kFireSpread,
-	kFireRate,
+	kEntities,
+	kJungle,
 	kTitleScreen,
-	kButtonNormal,
-	kButtonSelected,
-	kButtonPressed
+	kButtons,
+	kExplosion,
+	kParticle,
+	kFinishLine
 };

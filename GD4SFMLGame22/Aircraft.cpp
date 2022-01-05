@@ -20,24 +20,10 @@ namespace
 }
 
 
-Textures ToTextureID(AircraftType type)
-{
-	switch(type)
-	{
-	case AircraftType::kEagle:
-		return Textures::kEagle;
-	case AircraftType::kRaptor:
-		return Textures::kRaptor;
-	case AircraftType::kAvenger:
-		return Textures::kAvenger;
-	}
-	return Textures::kEagle;
-}
-
 Aircraft::Aircraft(AircraftType type, const TextureHolder& textures, const FontHolder& fonts)
 	: Entity(Table[static_cast<int>(type)].m_hitpoints)
 	, m_type(type)
-	, m_sprite(textures.Get(Table[static_cast<int>(type)].m_texture))
+	, m_sprite(textures.Get(Table[static_cast<int>(type)].m_texture), Table[static_cast<int>(type)].m_texture_rect)
 	, m_is_firing(false)
 	, m_is_launching_missile(false)
 , m_fire_countdown(sf::Time::Zero)
