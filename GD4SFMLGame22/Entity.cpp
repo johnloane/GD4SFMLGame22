@@ -67,3 +67,9 @@ bool Entity::IsDestroyed() const
 {
 	return m_hitpoints <= 0;
 }
+
+void Entity::Remove()
+{
+	Destroy();
+}
+

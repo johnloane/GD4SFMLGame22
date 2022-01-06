@@ -353,7 +353,6 @@ void World::DestroyEntitiesOutsideView()
 		//Does the object intersect with the battlefield
 		if (!GetBattlefieldBounds().intersects(e.GetBoundingRect()))
 		{
-			std::cout << "Destroying the entity" << std::endl;
 			e.Destroy();
 		}
 	});

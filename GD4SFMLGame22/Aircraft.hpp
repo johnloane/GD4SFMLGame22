@@ -5,6 +5,7 @@
 
 #include <SFML/Graphics/Sprite.hpp>
 
+#include "Animation.hpp"
 #include "CommandQueue.hpp"
 #include "ProjectileType.hpp"
 #include "TextNode.hpp"
@@ -29,6 +30,7 @@ public:
 
 	sf::FloatRect GetBoundingRect() const override;
 	bool IsMarkedForRemoval() const override;
+	void Remove() override;
 
 
 private:
@@ -44,6 +46,7 @@ private:
 private:
 	AircraftType m_type;
 	sf::Sprite m_sprite;
+	Animation m_explosion;
 
 	Command m_fire_command;
 	Command m_missile_command;
@@ -55,6 +58,8 @@ private:
 	sf::Time m_fire_countdown;
 
 	bool m_is_marked_for_removal;
+	bool m_show_explosion;
+	bool m_spawned_pickup;
 
 
 	unsigned int m_fire_rate;
