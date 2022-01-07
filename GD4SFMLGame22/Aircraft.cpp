@@ -146,6 +146,7 @@ void Aircraft::UpdateTexts()
 void Aircraft::UpdateCurrent(sf::Time dt, CommandQueue& commands)
 {
 	UpdateTexts();
+	UpdateRollAnimation();
 
 	if(IsDestroyed())
 	{
@@ -316,6 +317,24 @@ void Aircraft::Remove()
 {
 	Entity::Remove();
 	m_show_explosion = false;
+}
+
+void Aircraft::UpdateRollAnimation()
+{
+	if (Table[static_cast<int>(m_type)].m_has_roll_animation)
+	{
+		sf::IntRect textureRect = Table[static_cast<int>(m_type)].m_texture_rect;
+
+		// Roll left: Texture rect offset once
+		if (GetVelocity().x < 0.f)
+			textureRect.left += textureRect.width;
+
+		// Roll right: Texture rect offset twice
+		else if (GetVelocity().x > 0.f)
+			textureRect.left += 2 * textureRect.width;
+
+		m_sprite.setTextureRect(textureRect);
+	}
 }
 
 

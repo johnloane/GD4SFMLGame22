@@ -41,6 +41,7 @@ private:
 	bool IsAllied() const;
 	void CreatePickup(SceneNode& node, const TextureHolder& textures) const;
 	void CheckPickupDrop(CommandQueue& commands);
+	void UpdateRollAnimation();
 
 
 private:
