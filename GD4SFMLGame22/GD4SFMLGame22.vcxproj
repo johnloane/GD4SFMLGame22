@@ -148,6 +148,7 @@
     <ClCompile Include="Aircraft.cpp" />
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="BloomEffect.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="CommandQueue.cpp" />
@@ -165,6 +166,7 @@
     <ClCompile Include="PauseState.cpp" />
     <ClCompile Include="Pickup.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PostEffect.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="SceneNode.cpp" />
     <ClCompile Include="SettingsState.cpp" />
@@ -181,6 +183,7 @@
     <ClInclude Include="AircraftType.hpp" />
     <ClInclude Include="Animation.hpp" />
     <ClInclude Include="Application.hpp" />
+    <ClInclude Include="BloomEffect.hpp" />
     <ClInclude Include="Button.hpp" />
     <ClInclude Include="ButtonType.hpp" />
     <ClInclude Include="Category.hpp" />
@@ -206,12 +209,14 @@
     <ClInclude Include="PickupType.hpp" />
     <ClInclude Include="Player.hpp" />
     <ClInclude Include="PlayerAction.hpp" />
+    <ClInclude Include="PostEffect.hpp" />
     <ClInclude Include="Projectile.hpp" />
     <ClInclude Include="ProjectileType.hpp" />
     <ClInclude Include="ResourceHolder.hpp" />
     <ClInclude Include="ResourceIdentifiers.hpp" />
     <ClInclude Include="SceneNode.hpp" />
     <ClInclude Include="SettingsState.hpp" />
+    <ClInclude Include="Shaders.hpp" />
     <ClInclude Include="SpriteNode.hpp" />
     <ClInclude Include="State.hpp" />
     <ClInclude Include="StateID.hpp" />

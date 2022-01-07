@@ -7,12 +7,13 @@
 #include "ParticleNode.hpp"
 #include "ParticleType.hpp"
 #include "Pickup.hpp"
+#include "PostEffect.hpp"
 #include "Projectile.hpp"
 #include "Utility.hpp"
 
-World::World(sf::RenderWindow& window, FontHolder& font)
-	: m_window(window)
-	, m_camera(window.getDefaultView())
+World::World(sf::RenderTarget& output_target, FontHolder& font)
+	: m_target(output_target)
+	, m_camera(output_target.getDefaultView())
 	, m_textures()
 	, m_fonts(font)
 	, m_scenegraph()
@@ -22,9 +23,10 @@ World::World(sf::RenderWindow& window, FontHolder& font)
 	, m_scrollspeed(-50.f)
 	, m_player_aircraft(nullptr)
 {
+	m_scene_texture.create(m_target.getSize().x, m_target.getSize().y);
+
 	LoadTextures();
 	BuildScene();
-	std::cout << m_camera.getSize().x << m_camera.getSize().y << std::endl;
 	m_camera.setCenter(m_spawn_position);
 }
 
@@ -57,8 +59,20 @@ void World::Update(sf::Time dt)
 
 void World::Draw()
 {
-	m_window.setView(m_camera);
-	m_window.draw(m_scenegraph);
+	if(PostEffect::IsSupported())
+	{
+		m_scene_texture.clear();
+		m_scene_texture.setView(m_camera);
+		m_scene_texture.draw(m_scenegraph);
+		m_scene_texture.display();
+		m_bloom_effect.Apply(m_scene_texture, m_target);
+	}
+	else
+	{
+		m_target.setView(m_camera);
+		m_target.draw(m_scenegraph);
+	}
+
 }
 
 bool World::HasAlivePlayer() const
