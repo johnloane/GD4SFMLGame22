@@ -12,6 +12,7 @@
 #include "DataTables.hpp"
 #include "Pickup.hpp"
 #include "PickupType.hpp"
+#include "SoundNode.hpp"
 
 
 namespace
@@ -31,6 +32,7 @@ Aircraft::Aircraft(AircraftType type, const TextureHolder& textures, const FontH
 , m_is_marked_for_removal(false)
 , m_show_explosion(true)
 , m_spawned_pickup(false)
+, m_played_explosion_sound(false)
 , m_fire_rate(1)
 , m_spread_level(1)
 , m_missile_ammo(2)
@@ -152,6 +154,15 @@ void Aircraft::UpdateCurrent(sf::Time dt, CommandQueue& commands)
 	{
 		CheckPickupDrop(commands);
 		m_explosion.Update(dt);
+
+		// Play explosion sound only once
+		if (!m_played_explosion_sound)
+		{
+			SoundEffect soundEffect = (Utility::RandomInt(2) == 0) ? SoundEffect::kExplosion1 : SoundEffect::kExplosion2;
+			PlayLocalSound(commands, soundEffect);
+
+			m_played_explosion_sound = true;
+		}
 		return;
 	}
 	//Check if bullets or missiles are fired
@@ -221,8 +232,7 @@ void Aircraft::CheckProjectileLaunch(sf::Time dt, CommandQueue& commands)
 	//Rate the bullets - default to 2 times a second
 	if(m_is_firing && m_fire_countdown <= sf::Time::Zero)
 	{
-		//Countdown expired, can fire again
-		std::cout << "Pushing fire command" << std::endl;
+		PlayLocalSound(commands, IsAllied() ? SoundEffect::kAlliedGunfire : SoundEffect::kEnemyGunfire);
 		commands.Push(m_fire_command);
 		m_fire_countdown += Table[static_cast<int>(m_type)].m_fire_interval / (m_fire_rate + 1.f);
 		m_is_firing = false;
@@ -236,6 +246,7 @@ void Aircraft::CheckProjectileLaunch(sf::Time dt, CommandQueue& commands)
 	//Missile launch
 	if(m_is_launching_missile)
 	{
+		PlayLocalSound(commands, SoundEffect::kLaunchMissile);
 		commands.Push(m_missile_command);
 		m_is_launching_missile = false;
 	}
@@ -335,6 +346,21 @@ void Aircraft::UpdateRollAnimation()
 
 		m_sprite.setTextureRect(textureRect);
 	}
+}
+
+void Aircraft::PlayLocalSound(CommandQueue& commands, SoundEffect effect)
+{
+	sf::Vector2f world_position = GetWorldPosition();
+
+	Command command;
+	command.category = Category::kSoundEffect;
+	command.action = DerivedAction<SoundNode>(
+		[effect, world_position](SoundNode& node, sf::Time)
+	{
+		node.PlaySound(effect, world_position);
+	});
+
+	commands.Push(command);
 }
 
 

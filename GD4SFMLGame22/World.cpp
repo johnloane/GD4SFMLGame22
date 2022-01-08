@@ -9,13 +9,15 @@
 #include "Pickup.hpp"
 #include "PostEffect.hpp"
 #include "Projectile.hpp"
+#include "SoundNode.hpp"
 #include "Utility.hpp"
 
-World::World(sf::RenderTarget& output_target, FontHolder& font)
+World::World(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds)
 	: m_target(output_target)
 	, m_camera(output_target.getDefaultView())
 	, m_textures()
 	, m_fonts(font)
+	, m_sounds(sounds)
 	, m_scenegraph()
 	, m_scene_layers()
 	, m_world_bounds(0.f, 0.f, m_camera.getSize().x, 5000)
@@ -55,6 +57,8 @@ void World::Update(sf::Time dt)
 	//Apply movement
 	m_scenegraph.Update(dt, m_command_queue);
 	AdaptPlayerPosition();
+
+	UpdateSounds();
 }
 
 void World::Draw()
@@ -133,6 +137,10 @@ void World::BuildScene()
 	// Add propellant particle node to the scene
 	std::unique_ptr<ParticleNode> propellantNode(new ParticleNode(ParticleType::kPropellant, m_textures));
 	m_scene_layers[static_cast<int>(Layers::kLowerAir)]->AttachChild(std::move(propellantNode));
+
+	// Add sound effect node
+	std::unique_ptr<SoundNode> soundNode(new SoundNode(m_sounds));
+	m_scenegraph.AttachChild(std::move(soundNode));
 
 	//Add player's aircraft
 	std::unique_ptr<Aircraft> leader(new Aircraft(AircraftType::kEagle, m_textures, m_fonts));
@@ -343,6 +351,7 @@ void World::HandleCollisions()
 			//Apply the pickup effect
 			pickup.Apply(player);
 			pickup.Destroy();
+			player.PlayLocalSound(m_command_queue, SoundEffect::kCollectPickup);
 		}
 
 		else if (MatchesCategories(pair, Category::Type::kPlayerAircraft, Category::Type::kEnemyProjectile) || MatchesCategories(pair, Category::Type::kEnemyAircraft, Category::Type::kAlliedProjectile))
@@ -371,4 +380,13 @@ void World::DestroyEntitiesOutsideView()
 		}
 	});
 	m_command_queue.Push(command);
+}
+
+void World::UpdateSounds()
+{
+	// Set listener's position to player position
+	m_sounds.SetListenerPosition(m_player_aircraft->GetWorldPosition());
+
+	// Remove unused sounds
+	m_sounds.RemoveStoppedSounds();
 }

@@ -10,10 +10,11 @@
 
 namespace GUI
 {
-	Button::Button(const FontHolder& fonts, const TextureHolder& textures)
-	: m_sprite(textures.Get(Textures::kButtons))
-	, m_text("", fonts.Get(Fonts::Main), 16)
+	Button::Button(State::Context context)
+	: m_sprite(context.textures->Get(Textures::kButtons))
+	, m_text("", context.fonts->Get(Fonts::Main), 16)
 	, m_is_toggle(false)
+	, m_sounds(*context.sounds)
 	{
 		ChangeTexture(ButtonType::Normal);
 		sf::FloatRect bounds = m_sprite.getLocalBounds();
@@ -70,6 +71,7 @@ namespace GUI
 		{
 			Deactivate();
 		}
+		m_sounds.Play(SoundEffect::kButton);
 	}
 
 	void Button::Deactivate()

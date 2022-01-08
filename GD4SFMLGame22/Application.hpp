@@ -30,6 +30,7 @@ private:
 	FontHolder m_fonts;
 
 	MusicPlayer m_music;
+	SoundPlayer m_sounds;
 
 	StateStack m_stack;
 

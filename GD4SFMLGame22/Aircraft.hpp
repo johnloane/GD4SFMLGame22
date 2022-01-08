@@ -31,6 +31,7 @@ public:
 	sf::FloatRect GetBoundingRect() const override;
 	bool IsMarkedForRemoval() const override;
 	void Remove() override;
+	void PlayLocalSound(CommandQueue& commands, SoundEffect effect);
 
 
 private:
@@ -61,6 +62,7 @@ private:
 	bool m_is_marked_for_removal;
 	bool m_show_explosion;
 	bool m_spawned_pickup;
+	bool m_played_explosion_sound;
 
 
 	unsigned int m_fire_rate;
