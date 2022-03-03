@@ -75,10 +75,10 @@ private:
 	std::map<sf::Int32, AircraftInfo> m_aircraft_info;
 
 	std::vector<PeerPtr> m_peers;
-	sf::Int32 m_aircraft_identifer_counter;
+	sf::Int32 m_aircraft_identifier_counter;
 	bool m_waiting_thread_end;
 
 	sf::Time m_last_spawn_time;
-	sf::Time m_time_fornext_spawn;
+	sf::Time m_time_for_next_spawn;
 };
 

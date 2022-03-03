@@ -17,6 +17,12 @@ public:
 	Aircraft(AircraftType type, const TextureHolder& textures, const FontHolder& fonts);
 	unsigned int GetCategory() const override;
 
+	void DisablePickups();
+	int GetIdentifier();
+	void SetIdentifier(int identifier);
+	int GetMissileAmmo() const;
+	void SetMissileAmmo(int ammo);
+
 	void IncreaseFireRate();
 	void IncreaseSpread();
 	void CollectMissiles(unsigned int count);
@@ -53,6 +59,7 @@ private:
 	Command m_fire_command;
 	Command m_missile_command;
 	Command m_drop_pickup_command;
+	
 
 	bool m_is_firing;
 	bool m_is_launching_missile;
@@ -61,8 +68,9 @@ private:
 
 	bool m_is_marked_for_removal;
 	bool m_show_explosion;
+	bool m_explosion_began;
 	bool m_spawned_pickup;
-	bool m_played_explosion_sound;
+	bool m_pickups_enabled;
 
 
 	unsigned int m_fire_rate;
@@ -72,5 +80,7 @@ private:
 	TextNode* m_missile_display;
 	float m_travelled_distance;
 	int m_directions_index;
+
+	int m_identifier;
 };
 

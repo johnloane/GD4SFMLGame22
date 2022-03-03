@@ -6,6 +6,7 @@
 #include "Aircraft.hpp"
 #include "Layers.hpp"
 #include "AircraftType.hpp"
+#include "NetworkNode.hpp"
 
 #include <SFML/System/NonCopyable.hpp>
 #include <SFML/Graphics/View.hpp>
@@ -20,16 +21,44 @@
 #include "CommandQueue.hpp"
 #include "SoundPlayer.hpp"
 
+#include "NetworkProtocol.hpp"
+#include "PickupType.hpp"
+#include "PlayerAction.hpp"
+
+namespace sf
+{
+	class RenderTarget;
+}
+
+
 
 class World : private sf::NonCopyable
 {
 public:
-	explicit World(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds);
+	explicit World(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds, bool networked=false);
 	void Update(sf::Time dt);
 	void Draw();
-	CommandQueue& getCommandQueue();
+
+	sf::FloatRect GetViewBounds() const;
+	CommandQueue& GetCommandQueue();
+
+	Aircraft* AddAircraft(int identifier);
+	void RemoveAircraft(int identifier);
+	void SetCurrentBattleFieldPosition(float line_y);
+	void SetWorldHeight(float height);
+
+	void AddEnemy(AircraftType type, float rel_x, float rel_y);
+	void SortEnemies();
+
 	bool HasAlivePlayer() const;
 	bool HasPlayerReachedEnd() const;
+
+	void SetWorldScrollCompensation(float compensation);
+	Aircraft* GetAircraft(int identifier) const;
+	sf::FloatRect GetBattlefieldBounds() const;
+	void CreatePickup(sf::Vector2f position, PickupType type);
+	bool PollGameAction(GameActions::Action& out);
+
 
 private:
 	void LoadTextures();
@@ -37,10 +66,8 @@ private:
 	void AdaptPlayerPosition();
 	void AdaptPlayerVelocity();
 
-	sf::FloatRect GetViewBounds() const;
-	sf::FloatRect GetBattlefieldBounds() const;
+	
 	void SpawnEnemies();
-	void AddEnemy(AircraftType type, float relX, float relY);
 	void AddEnemies();
 	void GuideMissiles();
 	void HandleCollisions();
@@ -74,10 +101,14 @@ private:
 	sf::FloatRect m_world_bounds;
 	sf::Vector2f m_spawn_position;
 	float m_scrollspeed;
-	Aircraft* m_player_aircraft;
+	float m_scrollspeed_compensation;
+	std::vector<Aircraft*> m_player_aircraft;
 	std::vector<SpawnPoint> m_enemy_spawn_points;
 	std::vector<Aircraft*>	m_active_enemies;
 
 	BloomEffect m_bloom_effect;
+	bool m_networked_world;
+	NetworkNode* m_network_node;
+	SpriteNode* m_finish_sprite;
 };
 

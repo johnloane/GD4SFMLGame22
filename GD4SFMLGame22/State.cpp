@@ -2,13 +2,14 @@
 
 #include "StateStack.hpp"
 
-State::Context::Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts, Player& player, MusicPlayer& music, SoundPlayer& sounds)
+State::Context::Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts, MusicPlayer& music, SoundPlayer& sounds, KeyBinding& keys1, KeyBinding& keys2)
 : window(&window)
 , textures(&textures)
 , fonts(&fonts)
-, player(&player)
 , music(&music)
 , sounds(&sounds)
+, keys1(&keys1)
+, keys2(&keys2)
 {
 }
 
@@ -41,4 +42,14 @@ void State::RequestStackClear()
 State::Context State::GetContext() const
 {
 	return m_context;
+}
+
+void State::OnActivate()
+{
+
+}
+
+void State::OnDestroy()
+{
+
 }

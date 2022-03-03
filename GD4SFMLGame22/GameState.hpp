@@ -13,6 +13,6 @@ public:
 
 private:
 	World m_world;
-	Player& m_player;
+	Player m_player;
 };
 
