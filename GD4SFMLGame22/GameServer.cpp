@@ -525,7 +525,7 @@ void GameServer::UpdateClientState()
 
 	for(const auto& aircraft : m_aircraft_info)
 	{
-		update_client_state_packet << aircraft.first << aircraft.second.m_position.x << aircraft.second.m_position.y;
+		update_client_state_packet << aircraft.first << aircraft.second.m_position.x << aircraft.second.m_position.y << aircraft.second.m_hitpoints << aircraft.second.m_missile_ammo;
 	}
 
 	SendToAll(update_client_state_packet);
