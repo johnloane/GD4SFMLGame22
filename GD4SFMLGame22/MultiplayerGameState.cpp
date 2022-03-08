@@ -178,7 +178,6 @@ bool MultiplayerGameState::Update(sf::Time dt)
 		sf::Packet packet;
 		if(m_socket.receive(packet) == sf::Socket::Done)
 		{
-			std::cout << packet << std::endl;
 			m_time_since_last_packet = sf::seconds(0.f);
 			sf::Int32 packet_type;
 			packet >> packet_type;

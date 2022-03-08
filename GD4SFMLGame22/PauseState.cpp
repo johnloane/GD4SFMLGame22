@@ -67,26 +67,11 @@ void PauseState::Draw()
 
 bool PauseState::Update(sf::Time)
 {
-	return false;
+	return m_let_updates_through;
 }
 
 bool PauseState::HandleEvent(const sf::Event& event)
 {
-	if (event.type != sf::Event::KeyPressed)
-		return false;
-
-	if (event.key.code == sf::Keyboard::Escape)
-	{
-		// Escape pressed, remove itself to return to the game
-		RequestStackPop();
-	}
-
-	if (event.key.code == sf::Keyboard::BackSpace)
-	{
-		// Escape pressed, remove itself to return to the game
-		RequestStackClear();
-		RequestStackPush(StateID::kMenu);
-	}
-
+	m_gui_container.HandleEvent(event);
 	return false;
 }
