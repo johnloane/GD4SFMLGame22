@@ -314,7 +314,6 @@ void World::AddEnemies()
 {
 	if(m_networked_world)
 	{
-		std::cout << "Server will spawn enemies" << std::endl;
 		return;
 	}
 	//Add all enemies
@@ -407,7 +406,6 @@ bool MatchesCategories(SceneNode::Pair& colliders, Category::Type type1, Categor
 {
 	unsigned int category1 = colliders.first->GetCategory();
 	unsigned int category2 = colliders.second->GetCategory();
-	std::cout << category1 << category2 << std::endl;
 	if(type1 & category1 && type2 & category2)
 	{
 		return true;

@@ -179,7 +179,7 @@ void Aircraft::UpdateCurrent(sf::Time dt, CommandQueue& commands)
 	//Entity has been destroyed, possibly drop pickup, mark for removal
 	if(IsDestroyed())
 	{
-		CheckPickupDrop(commands);
+		//CheckPickupDrop(commands);
 		m_explosion.Update(dt);
 
 		// Play explosion sound only once

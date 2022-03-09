@@ -486,6 +486,7 @@ void MultiplayerGameState::HandlePacket(sf::Int32 packet_type, sf::Packet& packe
 		sf::Int32 type;
 		sf::Vector2f position;
 		packet >> type >> position.x >> position.y;
+		std::cout << "Spawning pickup type " << type << std::endl;
 		m_world.CreatePickup(position, static_cast<PickupType>(type));
 	}
 	break;
